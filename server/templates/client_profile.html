@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}הפרופיל שלי{% endblock %}
+
+{% block content %}
+<h2>הפרטים שלי במועדון</h2>
+
+<div class="profile-info">
+    <div class="profile-item">
+        <strong>שם:</strong> {{ client.name }}
+    </div>
+    <div class="profile-item">
+        <strong>אימייל:</strong> {{ client.email }}
+    </div>
+    <div class="profile-item">
+        <strong>טלפון:</strong> {{ client.phone }}
+    </div>
+</div>
+
+<div class="profile-actions">
+    <a href="/client/edit" class="btn">עריכת פרטים</a>
+    <a href="/client/delete" class="btn danger">מחיקת חשבון</a>
+</div>
+{% endblock %}

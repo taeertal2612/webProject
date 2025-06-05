@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}הוספת מוצר{% endblock %}
+
+{% block content %}
+<h2>הוספת מוצר חדש</h2>
+
+<form method="POST" class="form-container">
+    <div class="form-group">
+        <label for="name">שם מוצר:</label>
+        <input type="text" id="name" name="name" required>
+    </div>
+
+    <div class="form-group">
+        <label for="price">מחיר:</label>
+        <input type="number" step="0.01" id="price" name="price" required>
+    </div>
+
+    <div class="form-group">
+        <label for="category">קטגוריה:</label>
+        <select id="category" name="category" required>
+            {% for category in categories %}
+                <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label for="description">תיאור:</label>
+        <textarea id="description" name="description"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="image_url">קישור לתמונה:</label>
+        <input type="text" id="image_url" name="image_url">
+    </div>
+
+    <button type="submit">הוסף מוצר</button>
+</form>
+{% endblock %}

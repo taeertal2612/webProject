@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}קטלוג מוצרים{% endblock %}
+{% block content %}
+
+<h2>קטלוג מוצרים</h2>
+
+<table>
+    <tr>
+        <th>שם</th>
+        <th>מחיר</th>
+        <th>קטגוריה</th>
+        <th>תיאור</th>
+        <th>תמונה</th>
+    </tr>
+    {% for product in products %}
+    <tr>
+        <td>{{ product.name }}</td>
+        <td>{{ product.price }} ₪</td>
+        <td>{{ product.category }}</td>
+        <td>{{ product.description }}</td>
+        <td><img src="{{ product.image_url }}" width="80"></td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

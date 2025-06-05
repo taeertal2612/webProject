@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}מחיקת חשבון{% endblock %}
+
+{% block content %}
+<h2>מחיקת חשבון</h2>
+
+<p class="warning-text">האם את/ה בטוח/ה שברצונך למחוק את חשבונך מהמועדון? פעולה זו אינה הפיכה.</p>
+
+<form method="POST" class="form-container">
+    <div class="form-group">
+        <button type="submit" class="danger-button">כן, מחק את החשבון</button>
+        <a href="/client/profile" class="cancel-link">ביטול</a>
+    </div>
+</form>
+{% endblock %}

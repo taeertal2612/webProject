@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}איזור אישי{% endblock %}
+
+{% block content %}
+<div class="dashboard-container">
+    <h2>שלום {{ username }}!</h2>
+    <p>התחברת כמנהל/מפעיל</p>
+    <p><strong>תפקיד:</strong> {{ role }}</p>
+</div>
+{% endblock %}

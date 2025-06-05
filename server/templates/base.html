@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}המערכת שלי{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- רספונסיביות -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+<header>
+    <nav>
+        <a href="/">דף הבית</a>
+        <a href="/katalog">קטלוג מוצרים</a>
+
+        {% if session.get('user_id') %}
+            {% if session.get('role') == 'admin' %}
+                <a href="/katalog/new">הוסף מוצר</a>
+                <a href="/inventory">ניהול מלאי</a>
+            {% endif %}
+            <a href="/dashboard">אזור אישי (צוות)</a>
+            <a href="/logout">התנתקות</a>
+
+        {% elif session.get('client_id') %}
+            <a href="/client/profile">הפרופיל שלי</a>
+            <a href="/client/edit">ערוך פרטים</a>
+            <a href="/client/delete">מחק חשבון</a>
+            <a href="/client/logout">התנתקות</a>
+
+        {% else %}
+            <a href="/login">התחברות צוות</a>
+            <a href="/client/login">התחברות לקוח</a>
+            <a href="/client/register">הרשמה ללקוח</a>
+        {% endif %}
+    </nav>
+    <hr>
+</header>
+
+<main>
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="message-error">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+</main>
+
+</body>
+</html>

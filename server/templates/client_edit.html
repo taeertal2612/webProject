@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}עריכת פרטי לקוח{% endblock %}
+
+{% block content %}
+<h2>עריכת הפרטים שלי</h2>
+
+<form method="POST" class="form-container">
+    <div class="form-group">
+        <label for="name">שם מלא:</label>
+        <input type="text" id="name" name="name" value="{{ client.name }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="email">אימייל:</label>
+        <input type="email" id="email" name="email" value="{{ client.email }}" required>
+    </div>
+
+    <div class="form-group">
+        <label for="phone">טלפון:</label>
+        <input type="text" id="phone" name="phone" value="{{ client.phone }}">
+    </div>
+
+    <div class="form-group">
+        <label for="password">סיסמה חדשה (אופציונלי):</label>
+        <input type="password" id="password" name="password">
+    </div>
+
+    <button type="submit">שמור שינויים</button>
+</form>
+{% endblock %}
