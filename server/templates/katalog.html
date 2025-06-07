@@ -4,6 +4,10 @@
 
 <h2>קטלוג מוצרים</h2>
 
+{% if session.get('role') == 'admin' %}
+    <a href="/katalog/new" class="btn">עריכת קטלוג</a>
+{% endif %}
+
 <table>
     <tr>
         <th>שם</th>

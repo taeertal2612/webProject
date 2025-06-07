@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}מבצעים לחברי מועדון{% endblock %}
+
+{% block content %}
+<div class="deals-container">
+    <h2>מבצעים בלעדיים לחברי מועדון</h2>
+
+    <div class="deals-grid">
+        {% for product in deals %}
+        <div class="deal-card">
+            <img src="{{ product.image_url }}" alt="{{ product.name }}">
+            <h3>{{ product.name }}</h3>
+            <p class="price"><del>{{ product.original_price }} ₪</del> <strong>{{ product.discounted_price }} ₪</strong></p>
+            <p>{{ product.description }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

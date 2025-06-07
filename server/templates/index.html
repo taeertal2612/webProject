@@ -4,13 +4,25 @@
 {% block content %}
 <div class="hero-section">
     <div class="hero-overlay">
-        <h1>ברוכים הבאים לאתר האטליז!</h1>
-        <p>התחבר כדי לצפות באיזורים מותאמים לך:</p>
-        <ul>
-            <li><a href="/login">התחברות צוות</a></li>
-            <li><a href="/client/login">התחברות לקוח</a></li>
-            <li><a href="/client/register">הרשמה ללקוח חדש</a></li>
-        </ul>
+        <h1>ברוכים הבאים לאטליז דהן</h1>
+
+        {% if session.get('client_id') %}
+            <p>שלום {{ session['client_name'] }} 👋</p>
+            <p>תודה שהצטרפת למועדון הלקוחות שלנו!</p>
+            <a href="/client/profile">לפרופיל האישי</a>
+
+        {% elif session.get('user_id') %}
+            <p>שלום {{ session['username'] }} 👋</p>
+            <p>כניסת מנהל</p>
+            <a href="/dashboard">מעבר ללוח הניהול</a>
+
+        {% else %}
+            <p>לצפייה במבצעים יש להתחבר כחבר מועדון</p>
+            <div class="button-group">
+                <a href="/client/register" class="btn">הרשמה למועדון</a>
+                <a href="/client/login" class="btn">התחברות לקוח</a>
+            </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}

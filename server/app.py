@@ -1,7 +1,6 @@
-from flask import Flask, request, g, render_template
+from flask import Flask, request, g, render_template, redirect, url_for, flash, session
 import sqlite3
 import click
-from flask import Flask, request, g, render_template, redirect, url_for, flash, session
 
 app = Flask(__name__)
 app.secret_key = 'super_secret_key'  # נדרש לניהול session
@@ -42,6 +41,7 @@ def init_db():
             category_id INTEGER,
             description TEXT,
             image_url TEXT,
+            on_sale INTEGER DEFAULT 0,
             FOREIGN KEY (category_id) REFERENCES categories(id)
         )
     ''')

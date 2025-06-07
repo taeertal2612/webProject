@@ -5,6 +5,10 @@
 <div class="inventory-container">
     <h2>מלאי קיים</h2>
 
+    {% if session.get('role') == 'admin' %}
+        <a href="/inventory/edit" class="btn">עריכת מלאי</a>
+    {% endif %}
+
     <table class="inventory-table">
         <thead>
             <tr>
