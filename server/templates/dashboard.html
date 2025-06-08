@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}דשבורד{% endblock %}
+
+{% block content %}
+<h2>ברוך הבא, {{ username }}</h2>
+
+{% if role == 'admin' %}
+    <h3>לוח ניהול</h3>
+    <ul>
+        <li><a href="{{ url_for('show_katalog') }}">צפייה בקטלוג המוצרים</a></li>
+        <li><a href="{{ url_for('add_product') }}">הוספת מוצר חדש</a></li>
+        <li><a href="{{ url_for('show_inventory') }}">ניהול מלאי</a></li>
+        <li><a href="{{ url_for('logout') }}">התנתקות</a></li>
+    </ul>
+
+{% elif role == 'client' %}
+    <h3>איזור אישי</h3>
+    <ul>
+        <li><a href="{{ url_for('client_profile') }}">הפרופיל שלי</a></li>
+        <li><a href="{{ url_for('client_edit') }}">עריכת פרטים</a></li>
+        <li><a href="{{ url_for('client_delete') }}">מחיקת חשבון</a></li>
+        <li><a href="{{ url_for('client_logout') }}">התנתקות</a></li>
+    </ul>
+
+{% else %}
+    <p>לא נמצאה הרשאה מתאימה</p>
+{% endif %}
+
+{% endblock %}

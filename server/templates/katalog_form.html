@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}הוספת מוצר חדש{% endblock %}
+{% block content %}
+
+<h2>הוספת מוצר חדש</h2>
+
+{% if session.get('role') == 'admin' %}
+    <form method="post" action="/katalog/new">
+        <label for="name">שם המוצר:</label><br>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="price">מחיר:</label><br>
+        <input type="number" id="price" name="price" step="0.01" required><br><br>
+
+        <label for="category">קטגוריה:</label><br>
+        <select id="category" name="category" required>
+            {% for cat in categories %}
+                <option value="{{ cat.id }}">{{ cat.name }}</option>
+            {% endfor %}
+        </select><br><br>
+
+        <label for="description">תיאור:</label><br>
+        <textarea id="description" name="description"></textarea><br><br>
+
+        <label for="image_url">קישור לתמונה:</label><br>
+        <input type="url" id="image_url" name="image_url"><br><br>
+
+        <input type="submit" value="שמור מוצר">
+    </form>
+{% else %}
+    <p>אין לך הרשאה לצפות בדף זה.</p>
+{% endif %}
+
+{% endblock %}
