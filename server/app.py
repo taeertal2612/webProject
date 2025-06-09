@@ -1,7 +1,6 @@
 import os
 from flask import Flask, request, g, render_template, redirect, url_for, flash, session
 import sqlite3
-import click
 
 
 # Ensure the 'database' folder exists before using it
@@ -22,11 +21,11 @@ def get_db(): # פותח חיבור למסד נתונים
     return db
 
 @app.teardown_appcontext
-def close_connection(exception):
+@app.teardown_appcontext
+def close_connection(_):
     db = getattr(g, '_database', None)
     if db is not None:
         db.close() 
-
 def init_db():
     db = get_db()
     
@@ -141,12 +140,18 @@ def home():
 def show_katalog():
     db = get_db()
     cur = db.execute('''
-        SELECT products.id, products.name, products.price, categories.name AS category
-        FROM products
-        LEFT JOIN categories ON products.category_id = categories.id
+        SELECT p.id,
+               p.name,
+               p.price,
+               c.name        AS category,
+               p.description,
+               p.image_url
+        FROM products p
+        LEFT JOIN categories c ON p.category_id = c.id
     ''')
     products = cur.fetchall()
     return render_template('katalog.html', products=products)
+
 
 # הוספת מוצר חדש (GET - טופס, POST - שליחה)
 @app.route('/katalog/new', methods=['GET', 'POST'])
@@ -188,6 +193,39 @@ def add_product():
 
     categories = db.execute('SELECT * FROM categories').fetchall()
     return render_template('add_product.html', categories=categories)
+# -------------------- עריכת מוצר קיים --------------------
+@app.route('/katalog/edit/<int:product_id>', methods=['GET', 'POST'])
+def edit_product(product_id):
+    # בדיקות הרשאה
+    if 'user_id' not in session or session.get('role') != 'admin':
+        return redirect(url_for('login'))
+
+    db = get_db()
+    if request.method == 'POST':
+        # שמירת העריכה
+        db.execute('''
+            UPDATE products
+            SET name = ?, price = ?, category_id = ?, description = ?, image_url = ?
+            WHERE id = ?
+        ''', (
+            request.form['name'],
+            request.form['price'],
+            request.form['category'],
+            request.form['description'],
+            request.form['image_url'],
+            product_id
+        ))
+        db.commit()
+        return redirect(url_for('show_katalog'))
+
+    # GET: משיכת נתוני המוצר והקטגוריות לטופס
+    product    = db.execute('SELECT * FROM products WHERE id = ?', (product_id,)).fetchone()
+    categories = db.execute('SELECT * FROM categories').fetchall()
+    return render_template(
+        'katalog_form.html',
+        product=product,
+        categories=categories
+    )
 
 #---------בקרות מלאי--------
 # הצגת מלאי
@@ -349,6 +387,8 @@ def client_logout():
 def logout():
     session.clear()
     return redirect(url_for('login'))
+
+
 
 if __name__ == '__main__':
     with app.app_context():
