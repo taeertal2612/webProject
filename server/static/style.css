@@ -1,7 +1,24 @@
+/* --------------------------------------------- */
+/*      ייבוא גופנים – חייב להיות בראש הקובץ    */
+/* --------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat:wght@400;700&display=swap');
+
+/* ============================================= */
+/*               סגנונות כלליים                  */
+/* ============================================= */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* בהמשך כל הסגנונות שלך… */
+
+
 /* עיצוב כללי */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
+    background-color: #010101;
     direction: rtl;
     text-align: right;
     margin: 0;
@@ -230,4 +247,300 @@ a:hover {
 .deal-card del {
     color: #999;
     margin-left: 5px;
+}
+/* ====== סגנון גריד קטלוג ====== */
+
+.catalog-container {
+  background-color: #121212;
+  padding: 2rem;
+  color: #f5f5f5;
+}
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+.product-card {
+  background-color: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  transition: transform .2s;
+}
+.product-card:hover {
+  transform: translateY(-5px);
+}
+.catalog-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  background: #121212;
+}
+.catalog-title {
+  text-align: center;
+  color: #f5f5f5;
+  margin-bottom: 1.5rem;
+}
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+.product-card {
+  background: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  transition: transform .2s;
+}
+.product-card:hover {
+  transform: translateY(-5px);
+}
+.product-image {
+  width: 100%;
+  display: block;
+}
+.product-image.placeholder {
+  height: 200px;
+  background: #333;
+}
+.product-info {
+  padding: 1rem;
+  text-align: center;
+  color: #f5f5f5;
+}
+.product-title {
+  font-size: 1.2rem;
+  margin-bottom: .5rem;
+}
+.product-price {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: .5rem;
+}
+.product-desc {
+  font-size: .9rem;
+  opacity: .8;
+}
+.sale-badge {
+  position: absolute;
+  top: 10px; left: 10px;
+  background: #c62828;
+  color: #fff;
+  padding: .3rem .6rem;
+  border-radius: 4px;
+  font-size: .85rem;
+}
+
+/* ============================================= */
+/*              קובץ style.css הכולל             */
+/* ============================================= */
+
+/* ====== סגנונות כלליים (קיים במקור) ====== */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #fafafa;
+  color: #333;
+}
+
+/* כאן כל הקוד הקיים שלך ל־header, nav, buttons וכו’ */
+
+/* --------------------------------------------- */
+/*               ייבוא גופנים                     */
+/* --------------------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat:wght@400;700&display=swap');
+
+/* --------------------------------------------- */
+/*             סגנונות כלליים (מעודכן)         */
+/* --------------------------------------------- */
+
+/* מחלקה לכתוב לבן על כל רקע */
+.text-white {
+  color: #ffffff !important;
+}
+
+/* הגדרות כלליות לגוף הדף */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* --------------------------------------------- */
+/*               סגנונות קטלוג מוצר              */
+/* --------------------------------------------- */
+
+.catalog-container {
+  position: relative;
+
+  /* Full Bleed: מתפרש לרוחב המסך כולו */
+  width: 100vw;
+  left: 50%;
+  right: 50%;
+  margin-right: -50vw;
+  margin-left: -50vw;
+  box-sizing: border-box;
+
+  /* Center background image */
+  background-position: center center;
+
+  /* Full Height: לפחות גובה חלון */
+  min-height: 100vh;
+  padding: 2rem 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+
+  /* צבע רקע כהה כשאין תמונה מכסה את כל השטח */
+  background-color: #000;
+
+  /* רקע תמונה */
+  background-image: url('/static/images/background.png');
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
+}
+
+/* שכבת overlay חצי־שקופה מעל הרקע */
+.catalog-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* להעלות את התוכן מעל ה־overlay */
+.catalog-container > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* עוטף מרכזי כדי למרכז את התוכן */
+.catalog-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+/* כותרת קטלוג */
+.catalog-title {
+  font-family: Arial, sans-serif;
+  font-size: 4rem;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #f4d874;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+/* גריד של כרטיסי מוצרים */
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+}
+
+/* כרטיס מוצר */
+.product-card {
+  background: #1e1e1e;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  transition: transform .2s, box-shadow .2s;
+}
+.product-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* תמונת מוצר */
+.product-image {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+}
+.product-image.placeholder {
+  height: 200px;
+  background: #333;
+}
+
+/* מידע מוצר */
+.product-info {
+  padding: 1rem;
+  text-align: center;
+}
+.product-title {
+  font-size: 1.25rem;
+  margin-bottom: .5rem;
+  color: #f5f5f5;
+}
+.product-price {
+  font-size: 1.1rem;
+  font-weight: bold;
+  margin-bottom: .5rem;
+  color: #ffd54f;
+}
+.product-desc {
+  font-size: .9rem;
+  line-height: 1.4;
+  opacity: .85;
+  color: #e0e0e0;
+}
+
+/* תווית “מבצע” */
+.sale-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: #c62828;
+  color: #fff;
+  padding: .3rem .6rem;
+  font-size: .85rem;
+  border-radius: 4px;
+  text-transform: uppercase;
+}
+
+/* מרכז את העוטף בתוך הקונטיינר */
+.catalog-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  text-align: center;
+}
+
+.catalog-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.5rem;
+  justify-content: center;  /* מרכז את השורות של הגריד */
+}
+
+/* ============================================= */
+/*         סוף סגנונות קטלוג מוצר                */
+/* ============================================= */
+/* כפתורים במקום לינקים */
+/* ============================================= */
+/*           כפתורים במקום לינקים                */
+/* ============================================= */
+.btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: #007bff;
+  color: #fff !important;
+  border: none;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color .2s;
+}
+.btn:hover,
+.btn:focus {
+  background-color: #0056b3;
+}
+.btn:active {
+  background-color: #00408d;
 }
