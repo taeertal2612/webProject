@@ -25,7 +25,7 @@ def get_db(): # פותח חיבור למסד נתונים
 def close_connection(exception):
     db = getattr(g, '_database', None)
     if db is not None:
-        db.close()
+        db.close() 
 
 def init_db():
     db = get_db()
@@ -54,7 +54,7 @@ def init_db():
     db.execute('''
         CREATE TABLE IF NOT EXISTS products (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
+            name TEXT NOT NULL UNIQUE,
             price REAL NOT NULL,
             category_id INTEGER,
             description TEXT,
@@ -64,11 +64,30 @@ def init_db():
         )
     ''')
     
+    # הכנסת מוצרים התחלתיים
+    db.executemany('''
+        INSERT OR IGNORE INTO products (name, price, category_id, description, image_url, on_sale)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ''', [
+        ('בשר טחון טרי', 45.90, 1, 'בשר בקר טחון באיכות גבוהה, מתאים לקציצות ולפסטה', '', 0),
+        ('סטייק אנטריקוט', 89.00, 1, 'נתח מובחר לסטייקים עסיסיים', '', 1),
+        ('חזה עוף טרי', 34.90, 2, 'חזה עוף טרי לנגיסים, שניצל או בישול בריא', '', 0),
+        ('כבד עוף', 24.00, 6, 'כבד עוף טרי, מתאים למרק או ממרח', '', 0),
+        ('קבב בקר מתובל', 49.00, 5, 'קבב מתובל מוכן לצלייה על האש או במחבת', '', 1),
+        ('נקנקיות ביתיות', 39.90, 4, 'נקנקיות עוף ביתיות בעבודת יד', '', 0),
+        ('כנפיים צלויות מוכנות', 42.00, 5, 'כנפיים מתובלות מוכנות לחימום בתנור', '', 0),
+        ('שוקיים עוף טרי', 31.00, 2, 'שוקיים טריים להכנה בתנור או על האש', '', 0),
+        ('שניצל עוף קפוא', 29.90, 3, 'שניצלים קפואים מוכנים לטיגון או אפייה, נוחים לארוחה מהירה', '', 0)
+    ])
+
     # טבלת מלאי
+    
+    db.execute('DROP TABLE IF EXISTS inventory')
+
     db.execute('''
-        CREATE TABLE IF NOT EXISTS inventory (
+        CREATE TABLE inventory (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            product_id INTEGER NOT NULL,
+            product_id INTEGER NOT NULL UNIQUE,
             quantity INTEGER NOT NULL DEFAULT 0,
             min_required INTEGER DEFAULT 10,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -137,20 +156,35 @@ def add_product():
     if session.get('role') != 'admin':
         return "גישה נדחתה – רק מנהלים יכולים להוסיף מוצרים", 403
 
-    db = get_db()
+    db = get_db()  # קבלת חיבור למסד הנתונים
+
     if request.method == 'POST':
+
         name = request.form['name']
         price = request.form['price']
         category_id = request.form['category']
         description = request.form['description']
         image_url = request.form['image_url']
 
-        db.execute('''
+        # הוספת מוצר לטבלת products
+        cur = db.execute('''
             INSERT INTO products (name, price, category_id, description, image_url)
             VALUES (?, ?, ?, ?, ?)
         ''', (name, price, category_id, description, image_url))
+        
+        # שליפת ה-id של המוצר החדש
+        product_id = cur.lastrowid
+
+        # הכנסת רשומה עם quantity = 0 לטבלת inventory
+        db.execute('''
+            INSERT INTO inventory (product_id, quantity)
+            VALUES (?, 0)
+        ''', (product_id,))
+
         db.commit()
+        flash('המוצר נוסף בהצלחה ונרשם למלאי בכמות 0')
         return redirect(url_for('show_katalog'))
+
 
     categories = db.execute('SELECT * FROM categories').fetchall()
     return render_template('add_product.html', categories=categories)
