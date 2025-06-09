@@ -2,28 +2,87 @@
 {% block title %}דשבורד{% endblock %}
 
 {% block content %}
-<h2>ברוך הבא, {{ username }}</h2>
+<style>
+.dashboard-container {
+    max-width: 500px;
+    margin: 40px auto;
+    background: #f9f9f9;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    padding: 32px 24px;
+    direction: rtl;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+.dashboard-container h2 {
+    color: #2d3a4b;
+    margin-bottom: 16px;
+    text-align: center;
+}
+.dashboard-container h3 {
+    color: #4a90e2;
+    margin-bottom: 12px;
+    text-align: center;
+}
+.dashboard-container ul {
+    list-style: none;
+    padding: 0;
+}
+.dashboard-container li {
+    margin: 12px 0;
+    text-align: center;
+}
+.dashboard-container a {
+    text-decoration: none;
+    color: #fff;
+    background: #4a90e2;
+    padding: 10px 28px;
+    border-radius: 8px;
+    transition: background 0.2s;
+    display: inline-block;
+    font-size: 1.05em;
+}
+.dashboard-container a:hover {
+    background: #357ab8;
+}
 
-{% if role == 'admin' %}
-    <h3>לוח ניהול</h3>
-    <ul>
-        <li><a href="{{ url_for('show_katalog') }}">צפייה בקטלוג המוצרים</a></li>
-        <li><a href="{{ url_for('add_product') }}">הוספת מוצר חדש</a></li>
-        <li><a href="{{ url_for('show_inventory') }}">ניהול מלאי</a></li>
-        <li><a href="{{ url_for('logout') }}">התנתקות</a></li>
-    </ul>
+/* כפתור אדום להתנתקות */
+.dashboard-container a.logout-btn {
+    background: #d9534f;
+}
+.dashboard-container a.logout-btn:hover {
+    background: #c9302c;
+}
 
-{% elif role == 'client' %}
-    <h3>איזור אישי</h3>
-    <ul>
-        <li><a href="{{ url_for('client_profile') }}">הפרופיל שלי</a></li>
-        <li><a href="{{ url_for('client_edit') }}">עריכת פרטים</a></li>
-        <li><a href="{{ url_for('client_delete') }}">מחיקת חשבון</a></li>
-        <li><a href="{{ url_for('client_logout') }}">התנתקות</a></li>
-    </ul>
+.dashboard-container p {
+    color: #d9534f;
+    text-align: center;
+    font-weight: bold;
+}
+</style>
 
-{% else %}
-    <p>לא נמצאה הרשאה מתאימה</p>
-{% endif %}
+<div class="dashboard-container">
+    <h2>ברוך הבא, {{ username }}</h2>
 
+    {% if role == 'admin' %}
+        <h3>לוח ניהול</h3>
+        <ul>
+            <li><a href="{{ url_for('show_katalog') }}">צפייה בקטלוג המוצרים</a></li>
+            <li><a href="{{ url_for('add_product') }}">הוספת מוצר חדש</a></li>
+            <li><a href="{{ url_for('show_inventory') }}">ניהול מלאי</a></li>
+            <li><a href="{{ url_for('logout') }}" class="logout-btn">התנתקות</a></li>
+        </ul>
+
+    {% elif role == 'client' %}
+        <h3>איזור אישי</h3>
+        <ul>
+            <li><a href="{{ url_for('client_profile') }}">הפרופיל שלי</a></li>
+            <li><a href="{{ url_for('client_edit') }}">עריכת פרטים</a></li>
+            <li><a href="{{ url_for('client_delete') }}">מחיקת חשבון</a></li>
+            <li><a href="{{ url_for('client_logout') }}" class="logout-btn">התנתקות</a></li>
+        </ul>
+
+    {% else %}
+        <p>לא נמצאה הרשאה מתאימה</p>
+    {% endif %}
+</div>
 {% endblock %}
