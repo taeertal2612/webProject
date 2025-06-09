@@ -2,39 +2,41 @@
 {% block title %}הרשמה למועדון לקוחות{% endblock %}
 
 {% block content %}
-<h2>הרשמה למועדון הלקוחות</h2>
+<div class="form-container">
+  <h2>הרשמה למועדון הלקוחות</h2>
 
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <div class="messages">
-      {% for message in messages %}
-        <p class="error">{{ message }}</p>
-      {% endfor %}
-    </div>
-  {% endif %}
-{% endwith %}
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div style="background-color: #fdecea; color: #b71c1c; border: 1px solid #f5c2c7; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; margin-bottom: 20px;">
+        {% for message in messages %}
+          {{ message }}
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
 
-<form method="POST" class="register-form">
-    <div class="form-group">
-        <label for="name">שם מלא:</label>
-        <input type="text" id="name" name="name" required>
-    </div>
+  <form method="POST" class="register-form" novalidate>
+      <div class="form-group">
+          <label for="name">שם מלא:</label>
+          <input type="text" id="name" name="name" pattern="^[א-תa-zA-Z\s]{2,}$" required>
+      </div>
 
-    <div class="form-group">
-        <label for="email">אימייל:</label>
-        <input type="email" id="email" name="email" required>
-    </div>
+      <div class="form-group">
+          <label for="email">אימייל:</label>
+          <input type="email" id="email" name="email" required>
+      </div>
 
-    <div class="form-group">
-        <label for="phone">טלפון:</label>
-        <input type="text" id="phone" name="phone">
-    </div>
+      <div class="form-group">
+          <label for="phone">טלפון:</label>
+          <input type="text" id="phone" name="phone" pattern="^0[2-9]\d{7,8}$" required>
+      </div>
 
-    <div class="form-group">
-        <label for="password">סיסמה:</label>
-        <input type="password" id="password" name="password" required>
-    </div>
+      <div class="form-group">
+          <label for="password">סיסמה:</label>
+          <input type="password" id="password" name="password" pattern="^(?=.*[a-zA-Z])(?=.*\d).{6,}$" required>
+      </div>
 
-    <button type="submit">הירשם</button>
-</form>
+      <button type="submit">הירשם</button>
+  </form>
+</div>
 {% endblock %}

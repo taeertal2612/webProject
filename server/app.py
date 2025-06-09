@@ -20,7 +20,6 @@ def get_db(): # פותח חיבור למסד נתונים
         db.row_factory = sqlite3.Row
     return db
 
-
 @app.teardown_appcontext
 def close_connection(_):
     db = getattr(g, '_database', None)
@@ -296,7 +295,7 @@ def client_register():
             
             db.commit()
             flash('ההרשמה בוצעה בהצלחה, אנא התחבר')
-            return redirect(url_for('login'))
+            return redirect(url_for('client_login'))
         except sqlite3.IntegrityError:
             flash('האימייל כבר קיים במערכת')
     return render_template('client_register.html')
@@ -378,10 +377,10 @@ def client_login():
         if client:
             session['client_id'] = client['id']
             session['client_name'] = client['name']
-            flash('התחברת בהצלחה!')
+            flash('התחברת בהצלחה!', 'success')  # ✅ כאן העדכון
             return redirect(url_for('client_profile'))
         else:
-            flash('אימייל או סיסמה שגויים')
+            flash('אימייל או סיסמה שגויים', 'error')
 
     return render_template('client_login.html')
 

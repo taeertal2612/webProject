@@ -20,4 +20,16 @@
     <a href="/client/edit" class="btn">עריכת פרטים</a>
     <a href="/client/delete" class="btn danger">מחיקת חשבון</a>
 </div>
+
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    <div class="messages">
+      {% for category, message in messages %}
+        <p class="message-{{ category }}">{{ message }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
 {% endblock %}

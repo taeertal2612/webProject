@@ -77,15 +77,7 @@
         <hr>
     </header>
 
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <div class="message-error">
-                {% for message in messages %}
-                    <p>{{ message }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
+    {# הסרנו את הודעות הפלאש כאן כדי למנוע כפילות #}
 
     {% block content %}{% endblock %}
 

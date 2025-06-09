@@ -1,11 +1,7 @@
-/* --------------------------------------------- */
 /*      ייבוא גופנים – חייב להיות בראש הקובץ    */
-/* --------------------------------------------- */
 @import url('https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat:wght@400;700&display=swap');
 
-/* ============================================= */
 /*               סגנונות כלליים                  */
-/* ============================================= */
 body {
   margin: 0;
   padding: 0;
@@ -13,8 +9,6 @@ body {
   width: 100vw;
   height: 100vh;
 }
-
-/* בהמשך כל הסגנונות שלך… */
 
 
 /* עיצוב כללי */
@@ -119,14 +113,6 @@ a:hover {
 }
 
 /* הודעות פלאש */
-.message-success {
-    color: green;
-    background-color: #e6ffe6;
-    padding: 10px;
-    border: 1px solid #6cc36c;
-    border-radius: 5px;
-    margin-bottom: 15px;
-}
 
 .message-error {
     color: red;
@@ -135,6 +121,17 @@ a:hover {
     border: 1px solid #e57373;
     border-radius: 5px;
     margin-bottom: 15px;
+}
+.message-success {
+  color: #155724;
+  background-color: #d4edda;
+  border: 1px solid #c3e6cb;
+  padding: 12px;
+  border-radius: 6px;
+  margin: 0 auto 1.5rem;
+  max-width: 600px;
+  text-align: center;
+  font-weight: bold;
 }
 
 /* התאמה למסכים קטנים */
@@ -190,7 +187,7 @@ a:hover {
     padding: 40px;
     border-radius: 12px;
     text-align: center;
-    color: white;
+    color: #333;
     max-width: 600px;
     width: 90%;
     animation: fadeInUp 1.2s ease-in-out;
@@ -582,12 +579,6 @@ html, body {
   background: #c41c00;          /* רקע אדום */
 }
 
-/* אם תרצי ליישר אנכית באמצע: */
-/*
-.form-wrapper {
-  align-items: center;
-}
-*/
 
 /* ============================================= */
 /*        עיצוב קופסה לבנה של הטופס               */
@@ -681,4 +672,14 @@ html, body {
     box-sizing: border-box;
 }
 
-
+.login-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* מרכוז אנכי */
+  align-items: center;     /* מרכוז אופקי */
+  padding: 2rem;
+  background-color: #f8f8f8;
+  box-sizing: border-box;
+  text-align: center;
+}
