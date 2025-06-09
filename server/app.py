@@ -20,7 +20,7 @@ def get_db(): # פותח חיבור למסד נתונים
         db.row_factory = sqlite3.Row
     return db
 
-@app.teardown_appcontext
+
 @app.teardown_appcontext
 def close_connection(_):
     db = getattr(g, '_database', None)
@@ -29,6 +29,15 @@ def close_connection(_):
 def init_db():
     db = get_db()
     
+        # ————————————————
+    # עבור כל מוצר קיים שעדיין אין לו image_url, הגדר URL לדוגמה
+    products = db.execute('SELECT id FROM products WHERE image_url IS NULL OR image_url = ""').fetchall()
+    for p in products:
+        # תחתוך כאן את הלוגיקה שלך ליצירת URL: זו רק דוגמה
+        example_url = f'https://your.cdn.com/images/{p["id"]}.png'
+        db.execute('UPDATE products SET image_url = ? WHERE id = ?', (example_url, p['id']))
+    # ————————————————
+
     # טבלת קטגוריות
     db.execute('''
         CREATE TABLE IF NOT EXISTS categories (
@@ -68,15 +77,15 @@ def init_db():
         INSERT OR IGNORE INTO products (name, price, category_id, description, image_url, on_sale)
         VALUES (?, ?, ?, ?, ?, ?)
     ''', [
-        ('בשר טחון טרי', 45.90, 1, 'בשר בקר טחון באיכות גבוהה, מתאים לקציצות ולפסטה', '', 0),
-        ('סטייק אנטריקוט', 89.00, 1, 'נתח מובחר לסטייקים עסיסיים', '', 1),
-        ('חזה עוף טרי', 34.90, 2, 'חזה עוף טרי לנגיסים, שניצל או בישול בריא', '', 0),
-        ('כבד עוף', 24.00, 6, 'כבד עוף טרי, מתאים למרק או ממרח', '', 0),
-        ('קבב בקר מתובל', 49.00, 5, 'קבב מתובל מוכן לצלייה על האש או במחבת', '', 1),
-        ('נקנקיות ביתיות', 39.90, 4, 'נקנקיות עוף ביתיות בעבודת יד', '', 0),
-        ('כנפיים צלויות מוכנות', 42.00, 5, 'כנפיים מתובלות מוכנות לחימום בתנור', '', 0),
-        ('שוקיים עוף טרי', 31.00, 2, 'שוקיים טריים להכנה בתנור או על האש', '', 0),
-        ('שניצל עוף קפוא', 29.90, 3, 'שניצלים קפואים מוכנים לטיגון או אפייה, נוחים לארוחה מהירה', '', 0)
+        ('בשר טחון טרי', 45.90, 1, 'בשר בקר טחון באיכות גבוהה, מתאים לקציצות ולפסטה', 'https://imageproxy.wolt.com/menu/menu-images/6404a8a0f2b988d7c742ff28/11aa636c-bc28-11ed-bea5-a2a23ec65113_9251d528_17a6_11eb_b7f4_7a34aa3c623a_________.001.jpeg', 0),
+        ('סטייק אנטריקוט', 89.00, 1, 'נתח מובחר לסטייקים עסיסיים', 'https://imageproxy.wolt.com/menu/menu-images/6404a8a0f2b988d7c742ff28/776a3d80-bc28-11ed-a256-8a288a656ae5_891c6664_632a_11ec_8366_0a11bb9b2ee3_899f66c8_4921_11eb_986e_125069e0dcac_entreco_te.001.jpeg?w=960', 1),
+        ('חזה עוף טרי', 34.90, 2, 'חזה עוף טרי לנגיסים, שניצל או בישול בריא', 'https://imageproxy.wolt.com/menu/menu-images/6404a8a0f2b988d7c742ff28/60beef2c-bc2d-11ed-b915-ceb3b1d926ee_1260673c_4436_11eb_b5d1_b2207081fb60_chicken_breast.001.jpeg?w=960', 0),
+        ('כבד עוף', 24.00, 6, 'כבד עוף טרי, מתאים למרק או ממרח', 'https://imageproxy.wolt.com/menu/menu-images/6404a8a0f2b988d7c742ff28/75523c32-bc2d-11ed-85f0-8280a53ff5c0_5407e1dc_4437_11eb_9afa_8e9b727c9d02_chicken_liver.001.jpeg?w=960', 0),
+        ('קבב בקר מתובל', 49.00, 5, 'קבב מתובל מוכן לצלייה על האש או במחבת', 'https://imageproxy.wolt.com/menu/menu-images/6404a8a0f2b988d7c742ff28/cabd1c06-bc31-11ed-a73c-921714ef75de_aebd15da_632f_11ec_be8f_7a134ec9bb8e_4e9be7ee_55d3_11ec_bef9_8abd5fcc431c_____2__1_.jpeg?w=960', 1),
+        ('נקנקיות ביתיות', 39.90, 4, 'נקנקיות עוף ביתיות בעבודת יד', 'https://imageproxy.wolt.com/menu/menu-images/6404a8a0f2b988d7c742ff28/53c048e0-5d2e-11ef-8b21-2a77e227d0d1_8c0f58e2_bc32_11ed_b078_a2fab9fe0d63_shutterstock_619560773.jpeg?w=960', 0),
+        ('כנפיים צלויות מוכנות', 42.00, 5, 'כנפיים מתובלות מוכנות לחימום בתנור', 'https://imageproxy.wolt.com/menu/menu-images/6404a8a0f2b988d7c742ff28/4e27f6e0-bc2f-11ed-a6e7-9e25d21668c1________photoroom.jpeg?w=960', 0),
+        ('שוקיים עוף טרי', 31.00, 2, 'שוקיים טריים להכנה בתנור או על האש', 'https://imageproxy.wolt.com/menu/menu-images/6404a8a0f2b988d7c742ff28/fb2cc538-bc2e-11ed-8346-da6c6b0912f8_d1e0f5c0_4433_11eb_9ef4_deded687223d_chicken_leg.001.jpeg?w=960', 0),
+        ('שניצל עוף קפוא', 29.90, 3, 'שניצלים קפואים מוכנים לטיגון או אפייה, נוחים לארוחה מהירה', 'https://imageproxy.wolt.com/menu/menu-images/6404a8a0f2b988d7c742ff28/03d9328e-bc2f-11ed-9f8b-bec86b81e71d_9052b4ca_4435_11eb_9bed_6a0bcea22ff2_chickenschnitzel.001.jpeg?w=960', 0)
     ])
 
     # טבלת מלאי
@@ -140,18 +149,18 @@ def home():
 def show_katalog():
     db = get_db()
     cur = db.execute('''
-        SELECT p.id,
-               p.name,
-               p.price,
-               c.name        AS category,
-               p.description,
-               p.image_url
-        FROM products p
-        LEFT JOIN categories c ON p.category_id = c.id
+        SELECT
+            products.id,
+            products.name,
+            products.price,
+            products.description,
+            products.image_url,
+            categories.name AS category
+        FROM products
+        LEFT JOIN categories ON products.category_id = categories.id
     ''')
     products = cur.fetchall()
     return render_template('katalog.html', products=products)
-
 
 # הוספת מוצר חדש (GET - טופס, POST - שליחה)
 @app.route('/katalog/new', methods=['GET', 'POST'])
