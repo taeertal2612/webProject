@@ -3,15 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}המערכת שלי{% endblock %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- רספונסיביות -->
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
 
 <header>
     <nav style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
         {% if session.get('user_id') %}
-            <!-- צוות / מנהל -->
             <a href="/">דף הבית</a>
             <a href="/katalog">קטלוג</a>
             <a href="/inventory">מלאי</a>
@@ -19,14 +18,12 @@
             <a href="/logout" style="margin-right: auto;">התנתקות</a>
 
         {% elif session.get('client_id') %}
-            <!-- לקוח -->
             <a href="/">דף הבית</a>
             <a href="/katalog">קטלוג</a>
             <a href="/deals">מבצעים</a>
             <a href="/client/logout" style="margin-right: auto;">התנתקות</a>
 
         {% else %}
-            <!-- אורח -->
             <a href="/">דף הבית</a>
             <a href="/katalog">קטלוג</a>
             <a href="/client/login">התחברות לקוח</a>
@@ -37,19 +34,18 @@
     <hr>
 </header>
 
-<main>
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <div class="message-error">
-                {% for message in messages %}
-                    <p>{{ message }}</p>
-                {% endfor %}
-            </div>
-        {% endif %}
-    {% endwith %}
+<!-- הורדנו את <main> -->
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="message-error">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
 
-    {% block content %}{% endblock %}
-</main>
+{% block content %}{% endblock %}
 
 </body>
 </html>
