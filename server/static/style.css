@@ -544,3 +544,183 @@ body {
 .btn:active {
   background-color: #00408d;
 }
+
+/* ============================================= */
+/*          סגנונות לטופס עריכת/הוספת מוצר       */
+/* ============================================= */
+
+/* מרכזים את כל התוכן */
+.form-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  background: #cc1a03;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* כותרת הטופס */
+.form-title {
+  text-align: center;
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* עיצוב כלל הלייבלים והאינפוטים */
+.product-form label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.product-form input[type="text"],
+.product-form input[type="number"],
+.product-form input[type="url"],
+.product-form select,
+.product-form textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.product-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* כפתור שמירה */
+.submit-btn {
+  display: block;
+  width: 100%;
+  margin: 1.5rem 0 0;
+  padding: 0.75rem;
+  background-color: #28a745;
+  color: #fff !important;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color .2s;
+}
+
+.submit-btn:hover {
+  background-color: #218838;
+}
+/* ============================================= */
+/*      Flex-wrapper + מרכז טופס עריכה/הוספה      */
+/* ============================================= */
+.form-wrapper {
+  display: flex;
+  justify-content: center;      /* מרכז אופקי */
+  align-items: flex-start;      /* תתחיל קצת מלמעלה */
+  padding: 2rem 0;              /* קצת מרווח למעלה/מטה */
+  min-height: calc(100vh - 4rem); /* גובה מינימום */
+  background: #c41c00;          /* רקע אדום */
+}
+
+/* אם תרצי ליישר אנכית באמצע: */
+/*
+.form-wrapper {
+  align-items: center;
+}
+*/
+
+/* ============================================= */
+/*        עיצוב קופסה לבנה של הטופס               */
+/* ============================================= */
+.form-container {
+  max-width: 500px;
+  width: 90%;
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+/* כותרת הטופס */
+.form-title {
+  text-align: center;
+  font-size: 1.75rem;
+  margin-bottom: 1rem;
+  font-family: 'Montserrat', sans-serif;
+}
+
+/* ============================================= */
+/*         סגנון השדות והלייבלים                  */
+/* ============================================= */
+.product-form label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.product-form input[type="text"],
+.product-form input[type="number"],
+.product-form input[type="url"],
+.product-form select,
+.product-form textarea {
+  width: 100%;
+  padding: 0.5rem;
+  margin-top: 0.25rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.product-form textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+/* ============================================= */
+/*            כפתור שמירה ירוק                    */
+/* ============================================= */
+.submit-btn {
+  display: block;
+  width: 100%;
+  margin: 1.5rem 0 0;
+  padding: 0.75rem;
+  background-color: #28a745;
+  color: #fff !important;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color .2s;
+}
+
+.submit-btn:hover {
+  background-color: #218838;
+}
+.background-katalog {
+    background-image: url("/static/images/katalogformpic.jpg"); /* או איך שקוראים לקובץ */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+}
+
+.form-container {
+    background-color: rgba(255, 255, 255, 0.96);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 0 25px rgba(0, 0, 0, 0.3);
+    width: 100%;
+    max-width: 500px;
+    box-sizing: border-box;
+}
+
+
