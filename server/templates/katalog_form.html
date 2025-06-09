@@ -1,34 +1,50 @@
 {% extends "base.html" %}
-{% block title %}הוספת מוצר חדש{% endblock %}
+{% block title %}
+  {% if product %}עריכת מוצר: {{ product.name }}{% else %}הוספת מוצר חדש{% endif %}
+{% endblock %}
+
 {% block content %}
+  <h2>
+    {% if product %}עריכת מוצר{% else %}הוספת מוצר חדש{% endif %}
+  </h2>
 
-<h2>הוספת מוצר חדש</h2>
+  {% if session.get('role') == 'admin' %}
+    <form method="post"
+          action="{% if product %}{{ url_for('edit_product', product_id=product.id) }}{% else %}{{ url_for('add_product') }}{% endif %}">
+      <!-- שם -->
+      <label for="name">שם המוצר:</label><br>
+      <input type="text" id="name" name="name" required
+             value="{{ product.name if product else '' }}"><br><br>
 
-{% if session.get('role') == 'admin' %}
-    <form method="post" action="/katalog/new">
-        <label for="name">שם המוצר:</label><br>
-        <input type="text" id="name" name="name" required><br><br>
+      <!-- מחיר -->
+      <label for="price">מחיר:</label><br>
+      <input type="number" id="price" name="price" step="0.01" required
+             value="{{ product.price if product else '' }}"><br><br>
 
-        <label for="price">מחיר:</label><br>
-        <input type="number" id="price" name="price" step="0.01" required><br><br>
+      <!-- קטגוריה -->
+      <label for="category">קטגוריה:</label><br>
+      <select id="category" name="category" required>
+        {% for cat in categories %}
+          <option value="{{ cat.id }}"
+            {% if product and product.category_id==cat.id %}selected{% endif %}>
+            {{ cat.name }}
+          </option>
+        {% endfor %}
+      </select><br><br>
 
-        <label for="category">קטגוריה:</label><br>
-        <select id="category" name="category" required>
-            {% for cat in categories %}
-                <option value="{{ cat.id }}">{{ cat.name }}</option>
-            {% endfor %}
-        </select><br><br>
+      <!-- תיאור -->
+      <label for="description">תיאור:</label><br>
+      <textarea id="description" name="description">{{ product.description if product else '' }}</textarea><br><br>
 
-        <label for="description">תיאור:</label><br>
-        <textarea id="description" name="description"></textarea><br><br>
+      <!-- URL תמונה -->
+      <label for="image_url">קישור לתמונה:</label><br>
+      <input type="url" id="image_url" name="image_url"
+             value="{{ product.image_url if product else '' }}"><br><br>
 
-        <label for="image_url">קישור לתמונה:</label><br>
-        <input type="url" id="image_url" name="image_url"><br><br>
-
-        <input type="submit" value="שמור מוצר">
+      <!-- כפתור שמירה -->
+      <input type="submit" value="{% if product %}עדכן מוצר{% else %}שמור מוצר{% endif %}">
     </form>
-{% else %}
+  {% else %}
     <p>אין לך הרשאה לצפות בדף זה.</p>
-{% endif %}
-
+  {% endif %}
 {% endblock %}
