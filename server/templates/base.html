@@ -58,12 +58,14 @@
                 <a href="/katalog">קטלוג</a>
                 <a href="/inventory">מלאי</a>
                 <a href="/dashboard">לוח ניהול</a>
+                <a href="/deals">מבצעים</a>
                 <a href="/logout" style="margin-right: auto;">התנתקות</a>
 
             {% elif session.get('client_id') %}
                 <a href="/">דף הבית</a>
                 <a href="/katalog">קטלוג</a>
                 <a href="/deals">מבצעים</a>
+                <a href="/client_profile">הפרופיל שלי</a>
                 <a href="/client/logout" style="margin-right: auto;">התנתקות</a>
 
             {% else %}

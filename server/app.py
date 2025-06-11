@@ -134,7 +134,28 @@ def init_db():
         INSERT OR IGNORE INTO users (id, username, password, role)
         VALUES (?, ?, ?, ?)
     ''', (1, 'manager', '1234', 'admin'))
-
+    
+    #יצירת טבלת מבצעים
+    db.execute('''
+            CREATE TABLE IF NOT EXISTS deals (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            image_url TEXT,
+            original_price REAL,
+            discounted_price REAL,
+            description TEXT)
+            ''')
+    cursor = db.cursor()
+    cursor.execute("DELETE FROM deals")
+    # הכנסת מבצעים ראשוניים
+    db.executemany('''
+    INSERT OR IGNORE INTO deals (id, name, image_url, original_price, discounted_price, description)
+    VALUES (?, ?, ?, ?, ?, ?)''',
+    [(1, 'אנטריקוט מובחר', '/static/images/אנטריקוט אנגוס קפוא.avif', 75.00, 89.00, 'בשר בקר מובחר במחיר חגיגי לחברי מועדון!'),
+    (2, 'חזה עוף טרי', '/static/images/חזה עוף שלם טרי.avif', 25.00, 34.90, 'חזה עוף טרי ואיכותי – רק לחברי המועדון.'),
+    (3, 'קבב בקר מתובל', '/static/images/קבב בקר.avif', 89.90, 69.90, 'קבב בקר מתובל בעבודת יד – מבצע השבוע!')
+    ])
+    
     db.commit()
 
 
@@ -391,13 +412,45 @@ def client_logout():
     session.pop('client_id', None)
     session.pop('client_name', None)
     flash('התנתקת בהצלחה')
-    return redirect(url_for('client_login'))
+    return redirect(url_for('home'))
 
 @app.route('/logout')#התנתקות
 def logout():
     session.clear()
-    return redirect(url_for('login'))
+    return redirect(url_for('home'))
 
+#---------מבצעים---------
+@app.route('/deals') #הצגת מבצעים
+def show_deals():
+    db = get_db()
+    cursor = db.execute("SELECT name, image_url, original_price, discounted_price, description FROM deals")
+    deals = [dict(row) for row in cursor.fetchall()]
+    return render_template('deals.html', deals=deals)
+
+@app.route('/add_deal', methods=['GET', 'POST'])
+def add_deal():
+    if not session.get('user_id'):
+        flash("רק מנהלים יכולים להוסיף מבצעים.")
+        return redirect(url_for('show_deals'))
+
+    if request.method == 'POST':
+        name = request.form['name']
+        image_url = request.form['image_url']
+        original_price = float(request.form['original_price'])
+        discounted_price = float(request.form['discounted_price'])
+        description = request.form['description']
+
+        db = get_db()
+        db.execute('''
+            INSERT INTO deals (name, image_url, original_price, discounted_price, description)
+            VALUES (?, ?, ?, ?, ?)
+        ''', (name, image_url, original_price, discounted_price, description))
+        db.commit()
+
+        flash("מבצע נוסף בהצלחה!")
+        return redirect(url_for('show_deals'))
+
+    return render_template('add_deal.html')
 
 
 if __name__ == '__main__':

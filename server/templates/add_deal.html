@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}הוספת מבצע{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>הוספת מבצע חדש</h2>
+
+    <form method="POST" class="product-form">
+        <label for="name">שם המוצר:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="image_url">קישור לתמונה:</label>
+        <input type="url" id="image_url" name="image_url">
+
+        <label for="original_price">מחיר מקורי:</label>
+        <input type="number" step="0.01" id="original_price" name="original_price" required>
+
+        <label for="discounted_price">מחיר לאחר הנחה:</label>
+        <input type="number" step="0.01" id="discounted_price" name="discounted_price" required>
+
+        <label for="description">תיאור:</label>
+        <textarea id="description" name="description" rows="4"></textarea>
+
+        <button type="submit">💾 שמור מבצע</button>
+    </form>
+</div>
+{% endblock %}
