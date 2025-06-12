@@ -13,6 +13,10 @@
             <div class="sale-badge">מבצע!</div>
           {% endif %}
 
+          {% if p.name in deal_names %}
+            <div class="sale-badge">מבצע לחברי מועדון</div>
+          {% endif %}
+
           {% if p.image_url.startswith('http') %}
             <img class="product-image"
                  src="{{ p.image_url }}"

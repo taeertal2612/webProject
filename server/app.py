@@ -151,7 +151,7 @@ def init_db():
     db.executemany('''
     INSERT OR IGNORE INTO deals (id, name, image_url, original_price, discounted_price, description)
     VALUES (?, ?, ?, ?, ?, ?)''',
-    [(1, 'אנטריקוט מובחר', '/static/images/אנטריקוט אנגוס קפוא.avif', 89.00, 75.00, 'בשר בקר מובחר במחיר חגיגי לחברי מועדון!'),
+    [(1,'סטייק אנטריקוט', '/static/images/אנטריקוט אנגוס קפוא.avif', 89.00, 75.00, 'בשר בקר מובחר במחיר חגיגי לחברי מועדון!'),
     (2, 'חזה עוף טרי', '/static/images/חזה עוף שלם טרי.avif', 34.90, 25.00, 'חזה עוף טרי ואיכותי – רק לחברי המועדון.'),
     (3, 'קבב בקר מתובל', '/static/images/קבב בקר.avif', 89.90, 69.90, 'קבב בקר מתובל בעבודת יד – מבצע השבוע!')
     ])
@@ -165,23 +165,26 @@ def init_db():
 def home():
     return render_template('index.html')
 #---------קטלוג המוצרים---------
-# הצגת כל קטלוג המוצרים
 @app.route('/katalog')
 def show_katalog():
     db = get_db()
-    cur = db.execute('''
+    products = db.execute('''
         SELECT
             products.id,
             products.name,
             products.price,
             products.description,
             products.image_url,
+            products.on_sale,
             categories.name AS category
         FROM products
         LEFT JOIN categories ON products.category_id = categories.id
-    ''')
-    products = cur.fetchall()
-    return render_template('katalog.html', products=products)
+    ''').fetchall()
+
+    deals_raw = db.execute('SELECT name FROM deals').fetchall()
+    deal_names = [row['name'] for row in deals_raw]  # רשימה של שמות המוצרים במבצע
+
+    return render_template('katalog.html', products=products, deal_names=deal_names)
 
 # הוספת מוצר חדש (GET - טופס, POST - שליחה)
 @app.route('/katalog/new', methods=['GET', 'POST'])
