@@ -18,7 +18,7 @@
             {% for item in inventory %}
             <tr>
                 <td>{{ item.product_name }}</td>
-                <td>{{ item.quantity }}</td>
+                <td class="{% if item.quantity < item.min_required %}low-stock{% endif %}">{{ item.quantity }}</td>
                 <td>{{ item.min_required }}</td>
                 <td>
                     <form method="POST" action="/inventory/update/{{ item.id }}" class="update-form">
