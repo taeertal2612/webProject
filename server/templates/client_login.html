@@ -8,9 +8,9 @@
 
   {% with messages = get_flashed_messages() %}
     {% if messages %}
-    <div class="messages">
+    <div style="background-color: #fdecea; color: #b71c1c; border: 1px solid #f5c2c7; padding: 12px; border-radius: 8px; text-align: center; font-weight: bold; margin-bottom: 20px;">
       {% for message in messages %}
-        <p class="error">{{ message }}</p>
+        {{ message }}
       {% endfor %}
     </div>
     {% endif %}

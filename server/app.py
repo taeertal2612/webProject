@@ -1,6 +1,7 @@
 import os
 from flask import Flask, request, g, render_template, redirect, url_for, flash, session
 import sqlite3
+import re
 
 
 # Ensure the 'database' folder exists before using it
@@ -300,30 +301,47 @@ def client_profile():
     client = cur.fetchone()
     return render_template('client_profile.html', client=client)
 
+# תבניות ולידציה
+EMAIL_REGEX = r'^[^@]+@[^@]+\.[^@]+$'
+PHONE_REGEX = r'^0[2-9]\d{7,8}$'
+PASSWORD_REGEX = r'^(?=.*[a-zA-Z])(?=.*\d).{6,}$'
+NAME_REGEX = r'^[א-תa-zA-Z\s]{2,}$'
+
 # הרשמה של לקוח חדש
 @app.route('/client/register', methods=['GET', 'POST'])
 def client_register():
     if request.method == 'POST':
-        name = request.form['name']
-        email = request.form['email']
-        phone = request.form['phone']
-        password = request.form['password']
+        name = request.form.get('name', '').strip()
+        email = request.form.get('email', '').strip()
+        phone = request.form.get('phone', '').strip()
+        password = request.form.get('password', '').strip()
 
-        db = get_db()
-        try:
-            # הוספת לקוח
-            db.execute('INSERT INTO clients (name, email, phone, password) VALUES (?, ?, ?, ?)',
-                       (name, email, phone, password))
-            
-            # הוספתו גם לטבלת users כמשתמש רגיל (client)
-            db.execute('INSERT OR IGNORE INTO users (username, password, role) VALUES (?, ?, ?)',
-                       (email, password, 'client'))
-            
-            db.commit()
-            flash('ההרשמה בוצעה בהצלחה, אנא התחבר')
-            return redirect(url_for('client_login'))
-        except sqlite3.IntegrityError:
-            flash('האימייל כבר קיים במערכת')
+        # בדיקות תקינות (ולידציה צד שרת)
+        if not re.match(NAME_REGEX, name):
+            flash("יש להזין שם תקין (לפחות 2 תווים באותיות בלבד)")
+        elif not re.match(EMAIL_REGEX, email):
+            flash("כתובת האימייל אינה תקינה")
+        elif not re.match(PHONE_REGEX, phone):
+            flash("מספר טלפון אינו תקין (לדוגמה: 0521234567)")
+        elif not re.match(PASSWORD_REGEX, password):
+            flash("הסיסמה צריכה להכיל לפחות 6 תווים, כולל אותיות ומספרים")
+        else:
+            db = get_db()
+            try:
+                # הוספת לקוח
+                db.execute('INSERT INTO clients (name, email, phone, password) VALUES (?, ?, ?, ?)',
+                           (name, email, phone, password))
+
+                # הוספה גם לטבלת users כמשתמש רגיל (client)
+                db.execute('INSERT OR IGNORE INTO users (username, password, role) VALUES (?, ?, ?)',
+                           (email, password, 'client'))
+
+                db.commit()
+                flash('ההרשמה בוצעה בהצלחה, אנא התחבר')
+                return redirect(url_for('client_login'))
+            except sqlite3.IntegrityError:
+                flash('האימייל כבר קיים במערכת')
+
     return render_template('client_register.html')
 
 # עריכת פרטי לקוח

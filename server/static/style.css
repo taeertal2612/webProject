@@ -863,9 +863,10 @@ body {
 }
 
 .login-wrapper h2 {
-  color: #2c2c2c;
+  color: #ffffff;
   margin-bottom: 28px;
   font-size: 24px;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
 }
 
 .login-wrapper .form-group {

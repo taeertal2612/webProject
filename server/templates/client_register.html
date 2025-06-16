@@ -15,7 +15,7 @@
     {% endif %}
   {% endwith %}
 
-  <form method="POST" class="register-form" novalidate>
+  <form method="POST" action="{{ url_for('client_register') }}" class="client_register-form">
       <div class="form-group">
           <label for="name">שם מלא:</label>
           <input type="text" id="name" name="name" pattern="^[א-תa-zA-Z\s]{2,}$" required>
@@ -39,4 +39,17 @@
       <button type="submit">הירשם</button>
   </form>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const emailInput = document.getElementById('email');
+  emailInput.addEventListener('input', function () {
+    if (emailInput.validity.typeMismatch) {
+      emailInput.setCustomValidity("אנא הזן כתובת אימייל תקינה (לדוגמה: user@example.com)");
+    } else {
+      emailInput.setCustomValidity("");
+    }
+  });
+});
+</script>
 {% endblock %}
