@@ -64,7 +64,7 @@ def init_db():
         )
     ''')
     cursor = db.cursor()
-    cursor.execute("DELETE FROM products")
+
     # הכנסת מוצרים התחלתיים
     db.executemany('''
         INSERT OR IGNORE INTO products (name, price, category_id, description, image_url, on_sale)
@@ -88,18 +88,18 @@ def init_db():
         WHERE name = 'שוקיים עוף טרי'
     ''')
 
-    # יצירת טבלת מלאי
-    db.execute('DROP TABLE IF EXISTS inventory')
+# יצירת טבלת מלאי
+
     db.execute('''
-        CREATE TABLE inventory (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            product_id INTEGER NOT NULL UNIQUE,
-            quantity INTEGER NOT NULL DEFAULT 0,
-            min_required INTEGER DEFAULT 10,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (product_id) REFERENCES products(id)
-        )
-    ''')
+        CREATE TABLE IF NOT EXISTS inventory (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        product_id INTEGER NOT NULL UNIQUE,
+        quantity INTEGER NOT NULL DEFAULT 0,
+        min_required INTEGER DEFAULT 10,
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (product_id) REFERENCES products(id)
+    )
+''')
 
     # סנכרון כל המוצרים אל המלאי
     product_ids = db.execute('SELECT id FROM products').fetchall()
@@ -283,6 +283,22 @@ def show_inventory():
 def update_inventory(item_id):
     if 'user_id' not in session or session.get('role') != 'admin':
         return "גישה נדחתה", 403
+
+    try:
+        new_quantity = int(request.form['quantity'])
+        if new_quantity < 0:
+            flash('⚠️ לא ניתן להזין כמות שלילית במלאי', 'error')
+            return redirect(url_for('show_inventory'))
+    except ValueError:
+        flash('⚠️ יש להזין מספר חוקי בלבד', 'error')
+        return redirect(url_for('show_inventory'))
+
+    db = get_db()
+    db.execute('UPDATE inventory SET quantity = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', (new_quantity, item_id))
+    db.commit()
+    flash('✅ המלאי עודכן בהצלחה', 'success')
+    return redirect(url_for('show_inventory'))
+
 
     new_quantity = request.form['quantity']
     db = get_db()

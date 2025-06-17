@@ -1073,3 +1073,9 @@ body {
 .dashboard-container a.logout-btn:hover {
   background-color: #c9302c;
 }
+.flash-messages li.error {
+  color: red;
+}
+.flash-messages li.success {
+  color: green;
+}
