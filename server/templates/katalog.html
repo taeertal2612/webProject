@@ -3,44 +3,46 @@
 
 {% block content %}
 <div class="catalog-container">
-  <!-- העוטף המרכזי שמרכז את התוכן בתוך הקונטיינר -->
   <div class="catalog-inner">
     <h2 class="catalog-title">קטלוג מוצרים</h2>
     <div class="catalog-grid">
-      {% for p in products %}
+
+      {% for product in products %}
         <div class="product-card">
-          {% if p.on_sale %}
+
+          {% if product.on_sale %}
             <div class="sale-badge">מבצע!</div>
           {% endif %}
 
-          {% if p.name in deal_names %}
+          {% if product.name in deal_names %}
             <div class="sale-badge">מבצע לחברי מועדון</div>
           {% endif %}
 
-          {% if p.image_url.startswith('http') %}
-            <img class="product-image"
-                 src="{{ p.image_url }}"
-                 alt="{{ p.name }}">
+          {% if product.image_url.startswith('http') %}
+            <img class="product-image" src="{{ product.image_url }}" alt="{{ product.name }}">
+          {% elif 'static/' in product.image_url %}
+            <img class="product-image" src="{{ product.image_url }}" alt="{{ product.name }}">
           {% else %}
             <img class="product-image"
-                 src="{{ url_for('static', filename='images/' ~ p.image_url) }}"
-                 alt="{{ p.name }}">
+                 src="{{ url_for('static', filename='images/' ~ product.image_url) }}"
+                 alt="{{ product.name }}">
           {% endif %}
 
           <div class="product-info">
-            <div class="product-title">{{ p.name }}</div>
-            <div class="product-price">{{ "%.2f"|format(p.price) }} ₪</div>
-            {% if p.description %}
-              <div class="product-desc">{{ p.description }}</div>
+            <div class="product-title">{{ product.name }}</div>
+            <div class="product-price">{{ "%.2f"|format(product.price) }} ₪</div>
+            {% if product.description %}
+              <div class="product-desc">{{ product.description }}</div>
             {% endif %}
 
             {% if session.get('role') == 'admin' %}
-              <a href="{{ url_for('edit_product', product_id=p.id) }}"
+              <a href="{{ url_for('edit_product', product_id=product.id) }}"
                  class="btn edit-btn">ערוך</a>
             {% endif %}
           </div>
         </div>
       {% endfor %}
+
     </div>
   </div>
 </div>

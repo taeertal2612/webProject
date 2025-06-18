@@ -2,6 +2,8 @@ import os
 from flask import Flask, request, g, render_template, redirect, url_for, flash, session
 import sqlite3
 import re
+from werkzeug.utils import secure_filename
+
 
 
 # Ensure the 'database' folder exists before using it
@@ -11,6 +13,28 @@ if not os.path.exists('database'):
 app = Flask(__name__)
 app.secret_key = 'super_secret_key'  # נדרש לניהול session
 DATABASE = 'database/people.db'
+
+# הגדרות
+IMAGE_FOLDER = 'static/images'
+app.config['IMAGE_FOLDER'] = IMAGE_FOLDER
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'avif'}
+
+def save_uploaded_image(image_file):
+    """שומר תמונה בתיקייה static/images ומחזיר את הנתיב היחסי לתצוגה"""
+    if image_file and allowed_file(image_file.filename):
+        filename = secure_filename(image_file.filename)
+        save_dir = app.config['IMAGE_FOLDER']
+        os.makedirs(save_dir, exist_ok=True)
+        save_path = os.path.join(save_dir, filename)
+        image_file.save(save_path)
+        return '/static/images/' + filename
+    return ''
+
+def allowed_file(filename):
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+
+
 
 # --- Database Helper Functions ---
 
@@ -195,71 +219,102 @@ def add_product():
     if session.get('role') != 'admin':
         return "גישה נדחתה – רק מנהלים יכולים להוסיף מוצרים", 403
 
-    db = get_db()  # קבלת חיבור למסד הנתונים
+    db = get_db()
 
     if request.method == 'POST':
-
-        name = request.form['name']
-        price = request.form['price']
+        name        = request.form['name']
+        price       = request.form['price']
         category_id = request.form['category']
         description = request.form['description']
-        image_url = request.form['image_url']
+        image_url_input = request.form.get('image_url', '').strip()
+        image_file = request.files.get('image_file')
+        final_image_url = save_uploaded_image(image_file) or image_url_input
 
-        # הוספת מוצר לטבלת products
+
+
+        # אם הועלה קובץ תמונה תקין – נשמור אותו
+        if image_file and allowed_file(image_file.filename):
+            filename = secure_filename(image_file.filename)
+            upload_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+            image_file.save(upload_path)
+            final_image_url = '/' + upload_path.replace('\\', '/')
+
+        # אחרת אם הוזן קישור חיצוני – נשתמש בו
+        elif image_url_input:
+            final_image_url = image_url_input
+
+        # הוספת המוצר
         cur = db.execute('''
             INSERT INTO products (name, price, category_id, description, image_url)
             VALUES (?, ?, ?, ?, ?)
-        ''', (name, price, category_id, description, image_url))
-        
-        # שליפת ה-id של המוצר החדש
-        product_id = cur.lastrowid
+            ''', (name, price, category_id, description, final_image_url))
 
-        # הכנסת רשומה עם quantity = 0 לטבלת inventory
-        db.execute('''
-            INSERT INTO inventory (product_id, quantity)
-            VALUES (?, 0)
-        ''', (product_id,))
+        # הכנסת רשומה לטבלת המלאי עם כמות 0
+        product_id = cur.lastrowid
+        db.execute('INSERT INTO inventory (product_id, quantity) VALUES (?, 0)', (product_id,))
 
         db.commit()
         flash('המוצר נוסף בהצלחה ונרשם למלאי בכמות 0')
         return redirect(url_for('show_katalog'))
 
-
+    # GET: הצגת טופס
     categories = db.execute('SELECT * FROM categories').fetchall()
-    return render_template('add_product.html', categories=categories)
+    return render_template('katalog_form.html', categories=categories, product=None)
+
+
+
 # -------------------- עריכת מוצר קיים --------------------
 @app.route('/katalog/edit/<int:product_id>', methods=['GET', 'POST'])
 def edit_product(product_id):
-    # בדיקות הרשאה
     if 'user_id' not in session or session.get('role') != 'admin':
         return redirect(url_for('login'))
 
     db = get_db()
+
     if request.method == 'POST':
-        # שמירת העריכה
+        name        = request.form['name']
+        price       = request.form['price']
+        category_id = request.form['category']
+        description = request.form['description']
+        new_image_url = request.form.get('image_url', '').strip()
+        image_file     = request.files.get('image_file')
+
+        # שליפת התמונה הקיימת
+        existing = db.execute('SELECT image_url FROM products WHERE id = ?', (product_id,)).fetchone()
+        final_image_url = existing['image_url'] if existing else ''
+
+
+        # אם הועלה קובץ חדש – נטען אותו
+        image_url_input = request.form.get('image_url', '').strip()
+        image_file = request.files.get('image_file')
+
+        if image_file and allowed_file(image_file.filename):
+            final_image_url = save_uploaded_image(image_file)
+        elif image_url_input:
+            final_image_url = image_url_input
+
+        # שמירת הנתונים במסד
         db.execute('''
             UPDATE products
             SET name = ?, price = ?, category_id = ?, description = ?, image_url = ?
             WHERE id = ?
         ''', (
-            request.form['name'],
-            request.form['price'],
-            request.form['category'],
-            request.form['description'],
-            request.form['image_url'],
+            name,
+            price,
+            category_id,
+            description,
+            final_image_url,
             product_id
         ))
         db.commit()
         return redirect(url_for('show_katalog'))
 
-    # GET: משיכת נתוני המוצר והקטגוריות לטופס
-    product    = db.execute('SELECT * FROM products WHERE id = ?', (product_id,)).fetchone()
+    # GET – הצגת טופס עם נתוני המוצר
+    product = db.execute('SELECT * FROM products WHERE id = ?', (product_id,)).fetchone()
     categories = db.execute('SELECT * FROM categories').fetchall()
-    return render_template(
-        'katalog_form.html',
-        product=product,
-        categories=categories
-    )
+    return render_template('katalog_form.html', product=product, categories=categories)
+
 
 #---------בקרות מלאי--------
 # הצגת מלאי
@@ -464,24 +519,45 @@ def show_deals():
     deals = [dict(row) for row in cursor.fetchall()]
     return render_template('deals.html', deals=deals)
 
+# הוספת מבצע חדש (GET - טופס, POST - שליחה)
 @app.route('/add_deal', methods=['GET', 'POST'])
 def add_deal():
-    if not session.get('user_id'):
+    if not session.get('user_id') or session.get('role') != 'admin':
         flash("רק מנהלים יכולים להוסיף מבצעים.")
         return redirect(url_for('show_deals'))
 
     if request.method == 'POST':
-        name = request.form['name']
-        image_url = request.form['image_url']
-        original_price = float(request.form['original_price'])
+        name             = request.form['name']
+        image_url_input = request.form.get('image_url', '').strip()
+        image_file = request.files.get('image_file')
+        final_image_url = save_uploaded_image(image_file) or image_url_input
+        original_price   = float(request.form['original_price'])
         discounted_price = float(request.form['discounted_price'])
-        description = request.form['description']
+        description      = request.form['description']
+
+
+        # אם הועלה קובץ – שומרים בתיקייה static/images/
+        if image_file and allowed_file(image_file.filename):
+            filename = secure_filename(image_file.filename)
+            save_dir = os.path.join('static', 'images')
+            os.makedirs(save_dir, exist_ok=True)
+
+            save_path = os.path.join(save_dir, filename)
+            image_file.save(save_path)
+
+            final_image_url = '/static/images/' + filename
+
+        # אם לא הועלה קובץ אבל הוזן קישור
+        elif image_url_input:
+            final_image_url = image_url_input
+
+        print("נשמר image_url:", final_image_url)  # debug
 
         db = get_db()
         db.execute('''
             INSERT INTO deals (name, image_url, original_price, discounted_price, description)
             VALUES (?, ?, ?, ?, ?)
-        ''', (name, image_url, original_price, discounted_price, description))
+            ''', (name, final_image_url, original_price, discounted_price, description))
         db.commit()
 
         flash("מבצע נוסף בהצלחה!")
