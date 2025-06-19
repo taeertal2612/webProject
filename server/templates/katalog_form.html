@@ -32,7 +32,7 @@
         <select id="category" name="category" required>
           {% for cat in categories %}
             <option value="{{ cat.id }}"
-              {% if product and product.category_id==cat.id %}selected{% endif %}>
+              {% if product and product.category_id == cat.id %}selected{% endif %}>
               {{ cat.name }}
             </option>
           {% endfor %}
@@ -56,13 +56,19 @@
         {% endif %}
 
         <!-- שדה קישור לתמונה – רק אם לא מדובר בתמונה מהשרת -->
-          <img src="{{ product.image_url }}" alt="{{ product.name }}">
-
+        <img src="{{ product.image_url }}" alt="{{ product.name }}">
 
         <!-- כפתור שמירה -->
         <button type="submit" class="btn submit-btn">
           {% if product %}עדכן מוצר{% else %}שמור מוצר{% endif %}
         </button>
+
+        <!-- ✅ הצגת זמן עדכון אחרון -->
+        {% if product and product.updated_at %}
+          <p style="color: #666; margin-top: 10px;">
+            🕒 המוצר עודכן לאחרונה: {{ product.updated_at }}
+          </p>
+        {% endif %}
       </form>
     {% else %}
       <p>אין לך הרשאה לצפות בדף זה.</p>

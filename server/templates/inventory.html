@@ -5,14 +5,14 @@
 <div class="inventory-container">
     <h2>מלאי קיים</h2>
     {% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    <ul class="flash-messages">
-      {% for category, message in messages %}
-        <li class="{{ category }}">{{ message }}</li>
-      {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
+    {% if messages %}
+        <ul class="flash-messages">
+        {% for category, message in messages %}
+            <li class="{{ category }}">{{ message }}</li>
+        {% endfor %}
+        </ul>
+    {% endif %}
+    {% endwith %}
 
     <table class="inventory-table">
         <thead>
@@ -21,6 +21,7 @@
                 <th>כמות</th>
                 <th>כמות מינימלית</th>
                 <th>עדכון</th>
+                <th>עדכון אחרון</th> <!-- ✅ עמודה חדשה -->
             </tr>
         </thead>
         <tbody>
@@ -35,6 +36,7 @@
                         <button type="submit">עדכן</button>
                     </form>
                 </td>
+                <td>{{ item.updated_at }}</td> <!-- ✅ הצגת החותמת -->
             </tr>
             {% endfor %}
         </tbody>

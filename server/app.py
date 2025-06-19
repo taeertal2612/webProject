@@ -84,6 +84,7 @@ def init_db():
             description TEXT,
             image_url TEXT,
             on_sale INTEGER DEFAULT 0,
+            updated_at TIMESTAMP DEFAULT (datetime('now', 'localtime')),
             FOREIGN KEY (category_id) REFERENCES categories(id)
         )
     ''')
@@ -120,7 +121,7 @@ def init_db():
         product_id INTEGER NOT NULL UNIQUE,
         quantity INTEGER NOT NULL DEFAULT 0,
         min_required INTEGER DEFAULT 10,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        updated_at TIMESTAMP DEFAULT (datetime('now', 'localtime')),
         FOREIGN KEY (product_id) REFERENCES products(id)
     )
 ''')
@@ -168,7 +169,8 @@ def init_db():
             image_url TEXT,
             original_price REAL,
             discounted_price REAL,
-            description TEXT)
+            description TEXT,
+            updated_at TIMESTAMP DEFAULT (datetime('now', 'localtime')))
             ''')
     cursor = db.cursor()
     cursor.execute("DELETE FROM deals")
@@ -297,7 +299,7 @@ def edit_product(product_id):
         # שמירת הנתונים במסד
         db.execute('''
             UPDATE products
-            SET name = ?, price = ?, category_id = ?, description = ?, image_url = ?
+            SET name = ?, price = ?, category_id = ?, description = ?, image_url = ?, updated_at = datetime('now', 'localtime')
             WHERE id = ?
         ''', (
             name,
@@ -327,10 +329,11 @@ def show_inventory():
 
     db = get_db()
     inventory = db.execute('''
-        SELECT inventory.id, products.name AS product_name, inventory.quantity, inventory.min_required
-        FROM inventory
-        JOIN products ON inventory.product_id = products.id
-    ''').fetchall()
+    SELECT inventory.id, products.name AS product_name,
+           inventory.quantity, inventory.min_required,
+           inventory.updated_at
+    FROM inventory
+    JOIN products ON inventory.product_id = products.id''').fetchall()
     return render_template('inventory.html', inventory=inventory)
 
 # עדכון כמות מוצר במלאי (POST)
@@ -349,7 +352,7 @@ def update_inventory(item_id):
         return redirect(url_for('show_inventory'))
 
     db = get_db()
-    db.execute('UPDATE inventory SET quantity = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', (new_quantity, item_id))
+    db.execute('''UPDATE inventory SET quantity = ?, updated_at = datetime('now', 'localtime') WHERE id = ?''', (new_quantity, item_id))
     db.commit()
     flash('✅ המלאי עודכן בהצלחה', 'success')
     return redirect(url_for('show_inventory'))
@@ -357,7 +360,7 @@ def update_inventory(item_id):
 
     new_quantity = request.form['quantity']
     db = get_db()
-    db.execute('UPDATE inventory SET quantity = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?', (new_quantity, item_id))
+    db.execute('''UPDATE inventory SET quantity = ?, updated_at = datetime('now', 'localtime') WHERE id = ?''', (new_quantity, item_id))
     db.commit()
     return redirect(url_for('show_inventory'))
 
@@ -515,7 +518,7 @@ def logout():
 @app.route('/deals') #הצגת מבצעים
 def show_deals():
     db = get_db()
-    cursor = db.execute("SELECT name, image_url, original_price, discounted_price, description FROM deals")
+    cursor = db.execute("SELECT id, name, image_url, original_price, discounted_price, description, updated_at FROM deals")
     deals = [dict(row) for row in cursor.fetchall()]
     return render_template('deals.html', deals=deals)
 
@@ -554,10 +557,9 @@ def add_deal():
         print("נשמר image_url:", final_image_url)  # debug
 
         db = get_db()
-        db.execute('''
-            INSERT INTO deals (name, image_url, original_price, discounted_price, description)
-            VALUES (?, ?, ?, ?, ?)
-            ''', (name, final_image_url, original_price, discounted_price, description))
+        db.execute('''INSERT INTO deals (name, image_url, original_price, discounted_price, description, updated_at)
+                   VALUES (?, ?, ?, ?, ?, datetime('now', 'localtime'))
+''', (name, final_image_url, original_price, discounted_price, description))
         db.commit()
 
         flash("מבצע נוסף בהצלחה!")

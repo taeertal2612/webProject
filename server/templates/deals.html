@@ -7,7 +7,7 @@
     <h2 class="catalog-title">מבצעים בלעדיים לחברי מועדון</h2>
 
     {% if session.get('user_id') %}
-      <div style="text-align: left; margin-bottom: 20px;">
+      <div style="text-align: center; margin: 10px 0 30px;">
         <a href="{{ url_for('add_deal') }}" class="btn-add-deal">➕ הוספת מבצע</a>
       </div>
     {% endif %}
@@ -18,13 +18,20 @@
 
         <img src="{{ product.image_url }}" alt="{{ product.name }}">
 
-
         <h3>{{ product.name }}</h3>
         <p class="price">
           <del>{{ product.original_price }} ₪</del>
           <strong>{{ product.discounted_price }} ₪</strong>
         </p>
         <p>{{ product.description }}</p>
+
+        <!-- ✅ הצגת זמן הוספה/עדכון אם זה מנהל -->
+        {% if session.get('role') == 'admin' and product.updated_at %}
+          <p style="color: #888; font-size: 0.85em; margin-top: 5px;">
+            🕒 עודכן לאחרונה: {{ product.updated_at }}
+          </p>
+        {% endif %}
+
       </div>
       {% endfor %}
     </div>
