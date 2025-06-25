@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}עוזר AI לבחירת נתח{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    <h2>שאל את הקצב שלנו: איזה נתח מתאים לך?</h2>
+    <form method="POST">
+        <input type="text" name="question" placeholder="למשל: מה מתאים לגריל?" required style="width:100%; padding:10px;">
+        <button type="submit" style="margin-top:10px;">שאל</button>
+    </form>
+    <div class="examples" style="margin-top: 2rem; background: #f8f8f8; padding: 1rem 1.5rem; border-radius: 10px;">
+    <h4 style="margin-bottom: 0.5rem;">שאלות לדוגמה שתוכל לשאול:</h4>
+    <ul style="list-style: disc; padding-right: 1.5rem; text-align: right;">
+        <li>מה מתאים לגריל?</li>
+        <li>איזה נתח הכי טוב לטחינה?</li>
+        <li>אני רוצה להכין סטייק – איזה נתח?</li>
+        <li>מה כדאי לבישול ארוך?</li>
+        <li>יש המלצה לבשר לתבשיל?</li>
+    </ul>
+</div>
+
+
+    {% if response %}
+        <div class="message-success" style="margin-top: 20px;">
+            {{ response }}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

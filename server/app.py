@@ -3,7 +3,7 @@ from flask import Flask, request, g, render_template, redirect, url_for, flash, 
 import sqlite3
 import re
 from werkzeug.utils import secure_filename
-
+from ai_ollama import run_ai_assistant
 
 
 # Ensure the 'database' folder exists before using it
@@ -567,6 +567,18 @@ def add_deal():
 
     return render_template('add_deal.html')
 
+@app.route('/ai_assistant', methods=['GET', 'POST'])
+def ai_assistant():
+    response = ""
+
+    if request.method == 'POST':
+        question = request.form.get('question', '')
+        try:
+            response = run_ai_assistant(question)
+        except Exception as e:
+            response = f"שגיאה: {str(e)}"
+
+    return render_template('ai_assistant.html', response=response)
 
 if __name__ == '__main__':
     with app.app_context():
