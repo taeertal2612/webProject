@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+{% block title %}שליחת מייל ללקוחות{% endblock %}
+
+{% block content %}
+<style>
+    body {
+        background: url("/static/images/LOGINPIC.jpg") no-repeat center center fixed;
+        background-size: cover;
+    }
+
+    .email-container {
+        max-width: 600px;
+        margin: 50px auto;
+        background-color: rgba(255, 255, 255, 0.95);
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+        direction: rtl;
+        text-align: right;
+    }
+
+    .email-container h2 {
+        margin-bottom: 20px;
+    }
+
+    .email-container label {
+        font-weight: bold;
+    }
+
+    .email-container input[type="text"],
+    .email-container textarea {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+    }
+
+    .email-container .btns {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .email-container .btns input,
+    .email-container .btns button {
+        flex: 1;
+        padding: 10px;
+        border: none;
+        border-radius: 6px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .email-container .btns button {
+        background-color: #007bff;
+        color: white;
+    }
+
+    .email-container .btns input[type="submit"] {
+        background-color: #f0f0f0;
+    }
+
+    .preview-box {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        margin-top: 30px;
+        padding: 15px;
+        border-radius: 6px;
+        direction: rtl;
+    }
+</style>
+
+<div class="email-container">
+    <h2>שליחת מייל לכל הלקוחות</h2>
+
+    <form method="POST" onsubmit="return confirmSend();">
+        <label for="subject">נושא המייל:</label>
+        <input type="text" name="subject" id="subject" required>
+
+        <label for="content" style="margin-top: 15px;">תוכן המייל (HTML):</label>
+        <textarea name="content" id="content" rows="8" required></textarea>
+
+        <div class="btns">
+            <button type="button" onclick="previewEmail()">תצוגה מקדימה</button>
+            <input type="submit" value="שלח מיילים">
+        </div>
+    </form>
+
+    {% if success %}
+        <p style="color: green;">✔️ {{ success }}</p>
+    {% endif %}
+
+    <div class="preview-box">
+        <h3>📬 תצוגה מקדימה:</h3>
+        <div id="email-preview" style="min-height: 80px;"></div>
+    </div>
+</div>
+
+<script>
+function previewEmail() {
+    const subject = document.getElementById("subject").value;
+    const content = document.getElementById("content").value;
+    const preview = document.getElementById("email-preview");
+
+    preview.innerHTML = `<h4>${subject}</h4>` + content;
+}
+
+function confirmSend() {
+    return confirm("האם אתה בטוח שברצונך לשלוח את המייל לכל הלקוחות?");
+}
+</script>
+{% endblock %}

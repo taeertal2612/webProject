@@ -4,6 +4,7 @@ import sqlite3
 import re
 from werkzeug.utils import secure_filename
 from ai_ollama import run_ai_assistant
+from send_email import send_email_to_all_clients
 
 
 # Ensure the 'database' folder exists before using it
@@ -579,6 +580,25 @@ def ai_assistant():
             response = f"שגיאה: {str(e)}"
 
     return render_template('ai_assistant.html', response=response)
+
+#---------שליחת מיילים---------
+
+@app.route('/send_email', methods=['GET', 'POST'])
+def send_email_page():
+    if 'user_id' not in session or session.get('role') != 'admin':
+        return redirect(url_for('login'))
+
+    db = get_db()
+    success = None
+
+    if request.method == 'POST':
+        subject = request.form['subject']
+        content = request.form['content']
+        recipients = [row['email'] for row in db.execute('SELECT email FROM clients').fetchall()]
+        send_email_to_all_clients(subject, content, recipients)
+        success = f"המייל נשלח בהצלחה ל-{len(recipients)} לקוחות 🎉"
+
+    return render_template('send_email.html', success=success)
 
 if __name__ == '__main__':
     with app.app_context():
