@@ -9,18 +9,24 @@
         {% if session.get('client_id') %}
             <p>שלום {{ session['client_name'] }} 👋</p>
             <p>תודה שהצטרפת למועדון הלקוחות שלנו!</p>
-            <a href="/client/profile">לפרופיל האישי</a>
+            <a href="{{ url_for('client.client_profile') }}">לפרופיל האישי</a>
 
+        {% elif session.get('role') == 'admin' %}
+            <p>שלום מנהל {{ session['username'] }} 👋</p>
+            <p>ברוך שובך ללוח הניהול</p>
+            <a href="{{ url_for('home.dashboard') }}">מעבר ללוח הניהול</a>
+ 
         {% elif session.get('user_id') %}
             <p>שלום {{ session['username'] }} 👋</p>
             <p>כניסת מנהל</p>
-            <a href="/dashboard">מעבר ללוח הניהול</a>
+            <a href="{{ url_for('home.dashboard') }}">מעבר ללוח הניהול</a>
+
 
         {% else %}
             <p>לצפייה במבצעים יש להתחבר כחבר מועדון</p>
             <div class="button-group">
-                <a href="/client/register" class="btn">הרשמה למועדון</a>
-                <a href="/client/login" class="btn">התחברות לקוח</a>
+                <a href="{{ url_for('client.client_register') }}" class="btn">הרשמה למועדון</a>
+                <a href="{{ url_for('client.client_login') }}" class="btn">התחברות לקוח</a>
             </div>
         {% endif %}
     </div>

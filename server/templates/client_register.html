@@ -15,7 +15,7 @@
     {% endif %}
   {% endwith %}
 
-  <form method="POST" action="{{ url_for('client_register') }}" class="client_register-form">
+  <form method="POST" action="{{ url_for('client.client_register') }}" class="client_register-form">
       <div class="form-group">
           <label for="name">שם מלא:</label>
           <input type="text" id="name" name="name" pattern="^[א-תa-zA-Z\s]{2,}$" required>

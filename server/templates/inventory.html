@@ -31,7 +31,7 @@
                 <td class="{% if item.quantity < item.min_required %}low-stock{% endif %}">{{ item.quantity }}</td>
                 <td>{{ item.min_required }}</td>
                 <td>
-                    <form method="POST" action="/inventory/update/{{ item.id }}" class="update-form">
+                    <form method="POST" action="{{ url_for('inventory.update_inventory', item_id=item.id) }}" class="update-form">
                         <input type="number" name="quantity" min="0" placeholder="עדכן כמות" required>
                         <button type="submit">עדכן</button>
                     </form>

@@ -6,28 +6,26 @@
 <div class="dashboard-container">
     <h2>ברוך הבא, {{ username }}</h2>
 
-    {% if role == 'admin' %}
-        <h3>לוח ניהול</h3>
-        <ul>
-            <li><a href="{{ url_for('show_katalog') }}">צפייה בקטלוג המוצרים</a></li>
-            <li><a href="{{ url_for('add_product') }}">הוספת מוצר חדש</a></li>
-            <li><a href="{{ url_for('show_inventory') }}">ניהול מלאי</a></li>
-            <li><a href="{{ url_for('show_deals') }}">מבצעים</a></li>
-            <li><a href="{{ url_for('send_email_page') }}">שליחת מייל ללקוחות</a></li> 
-            <li><a href="{{ url_for('logout') }}" class="logout-btn">התנתקות</a></li>
-        </ul>
-
-    {% elif role == 'client' %}
-        <h3>איזור אישי</h3>
-        <ul>
-            <li><a href="{{ url_for('client_profile') }}">הפרופיל שלי</a></li>
-            <li><a href="{{ url_for('client_edit') }}">עריכת פרטים</a></li>
-            <li><a href="{{ url_for('client_delete') }}">מחיקת חשבון</a></li>
-            <li><a href="{{ url_for('client_logout') }}" class="logout-btn">התנתקות</a></li>
-        </ul>
-
-    {% else %}
-        <p>לא נמצאה הרשאה מתאימה</p>
-    {% endif %}
+{% if role == 'admin' %}
+    <h3>לוח ניהול</h3>
+    <ul>
+        <li><a href="{{ url_for('product.show_katalog') }}">צפייה בקטלוג המוצרים</a></li>
+        <li><a href="{{ url_for('product.add_product') }}">הוספת מוצר חדש</a></li>
+        <li><a href="{{ url_for('inventory.show_inventory') }}">ניהול מלאי</a></li>
+        <li><a href="{{ url_for('deal.show_deals') }}">מבצעים</a></li>
+        <li><a href="{{ url_for('email.send_email_page') }}">שליחת מייל ללקוחות</a></li> 
+        <li><a href="{{ url_for('user.logout') }}" class="logout-btn">התנתקות</a></li>
+    </ul>
+{% elif role == 'client' %}
+    <h3>איזור אישי</h3>
+    <ul>
+        <li><a href="{{ url_for('client.client_profile') }}">הפרופיל שלי</a></li>
+        <li><a href="{{ url_for('client.client_edit') }}">עריכת פרטים</a></li>
+        <li><a href="{{ url_for('client.client_delete') }}">מחיקת חשבון</a></li>
+        <li><a href="{{ url_for('client.client_logout') }}" class="logout-btn">התנתקות</a></li>
+    </ul>
+{% else %}
+    <p>לא נמצאה הרשאה מתאימה</p>
+{% endif %}
 </div>
 {% endblock %}

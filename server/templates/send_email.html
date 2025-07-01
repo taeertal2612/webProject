@@ -74,7 +74,7 @@
 <div class="email-container">
     <h2>שליחת מייל לכל הלקוחות</h2>
 
-    <form method="POST" onsubmit="return confirmSend();">
+    <form method="POST" action="{{ url_for('email.send_email_page') }}" onsubmit="return confirmSend();">
         <label for="subject">נושא המייל:</label>
         <input type="text" name="subject" id="subject" required>
 

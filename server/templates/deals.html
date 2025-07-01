@@ -8,7 +8,7 @@
 
     {% if session.get('user_id') %}
       <div style="text-align: center; margin: 10px 0 30px;">
-        <a href="{{ url_for('add_deal') }}" class="btn-add-deal">➕ הוספת מבצע</a>
+      <a href="{{ url_for('deal.add_deal') }}" class="btn-add-deal">➕ הוספת מבצע</a>
       </div>
     {% endif %}
 

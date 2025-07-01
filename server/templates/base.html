@@ -54,34 +54,32 @@
     <header>
         <nav style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
             {% if session.get('user_id') %}
-                <a href="/">דף הבית</a>
-                <a href="/katalog">קטלוג</a>
-                <a href="/inventory">מלאי</a>
-                <a href="/dashboard">לוח ניהול</a>
-                <a href="/deals">מבצעים</a>
-                <a href="/logout" style="margin-right: auto;">התנתקות</a>
+                <a href="{{ url_for('home.home') }}">דף הבית</a>
+                <a href="{{ url_for('product.show_katalog') }}">קטלוג</a>
+                <a href="{{ url_for('inventory.show_inventory') }}">מלאי</a>
+                <a href="{{ url_for('home.dashboard') }}">לוח ניהול</a>
+                <a href="{{ url_for('deal.show_deals') }}">מבצעים</a>
+                <a href="{{ url_for('user.logout') }}" style="margin-right: auto;">התנתקות</a>
 
             {% elif session.get('client_id') %}
-                <a href="/">דף הבית</a>
-                <a href="/katalog">קטלוג</a>
-                <a href="/deals">מבצעים</a>
-                <a href="/client_profile">הפרופיל שלי</a>
-                <a href="/client/logout" style="margin-right: auto;">התנתקות</a>
+                <a href="{{ url_for('home.home') }}">דף הבית</a>
+                <a href="{{ url_for('product.show_katalog') }}">קטלוג</a>
+                <a href="{{ url_for('deal.show_deals') }}">מבצעים</a>
+                <a href="{{ url_for('client.client_profile') }}">הפרופיל שלי</a>
+                <a href="{{ url_for('client.client_logout') }}" style="margin-right: auto;">התנתקות</a>
 
             {% else %}
-                <a href="/">דף הבית</a>
-                <a href="/katalog">קטלוג</a>
-                <a href="/client/login">התחברות לקוח</a>
-                <a href="/client/register">הרשמה למועדון הלקוחות</a>
-                <a href="/login" style="margin-right: auto;">התחברות צוות</a>
+                <a href="{{ url_for('home.home') }}">דף הבית</a>
+                <a href="{{ url_for('product.show_katalog') }}">קטלוג</a>
+                <a href="{{ url_for('client.client_login') }}">התחברות לקוח</a>
+                <a href="{{ url_for('client.client_register') }}">הרשמה למועדון הלקוחות</a>
+                <a href="{{ url_for('user.login') }}" style="margin-right: auto;">התחברות צוות</a>
             {% endif %}
-            <li><a href="{{ url_for('ai_assistant') }}">👨‍🍳 שאל את הקצב </a></li>
 
+            <li><a href="{{ url_for('ai.ai_assistant') }}">👨‍🍳 שאל את הקצב</a></li>
         </nav>
         <hr>
     </header>
-
-    {# הסרנו את הודעות הפלאש כאן כדי למנוע כפילות #}
 
     {% block content %}{% endblock %}
 
