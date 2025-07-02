@@ -14,5 +14,5 @@ def save_uploaded_image(image_file):
         os.makedirs(save_dir, exist_ok=True)
         save_path = os.path.join(save_dir, filename)
         image_file.save(save_path)
-        return 'server/static/images/' + filename
+        return f"/static/images/{filename}"
     return ''

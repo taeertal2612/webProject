@@ -9,7 +9,7 @@ app.secret_key = 'super_secret_key'
 app.config['DATABASE'] = 'database/people.db'  # ✅ הועבר ל-config
 
 # --- הגדרות תיקיית תמונות ---
-app.config['IMAGE_FOLDER'] = 'server/static/images'
+app.config['IMAGE_FOLDER'] = os.path.join(app.root_path, 'static', 'images')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'avif'}
 
 
